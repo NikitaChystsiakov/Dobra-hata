@@ -35,7 +35,7 @@ export const FORMATS: readonly RentalFormat[] = [
   {
     id: "a",
     letter: "А",
-    name: "Сутки",
+    name: "Территория с домом на сутки",
     perGuest: 180,
     checkIn: "15:00",
     checkOut: "12:00",
@@ -45,7 +45,7 @@ export const FORMATS: readonly RentalFormat[] = [
   {
     id: "b",
     letter: "Б",
-    name: "День с коттеджем",
+    name: "Территория с домом на день",
     perGuest: 140,
     checkIn: "15:00",
     checkOut: "24:00",
@@ -55,7 +55,7 @@ export const FORMATS: readonly RentalFormat[] = [
   {
     id: "c",
     letter: "В",
-    name: "Только территория",
+    name: "Территория на день",
     perGuest: 100,
     checkIn: "15:00",
     checkOut: "23:00",

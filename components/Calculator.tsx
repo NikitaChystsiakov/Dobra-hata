@@ -96,8 +96,8 @@ export default function Calculator({ todayISO, initial, font }: Props) {
       </header>
 
       <section className="intro">
-        <h1>Сколько выйдет на вашу компанию</h1>
-        <p>Выберите формат, дату и число гостей — сумма считается сразу, без звонка.</p>
+        <h1>Рассчитайте стоимость аренды усадьбы</h1>
+        <p>Выберите формат, дату и число гостей — сумма считается сразу.</p>
       </section>
 
       <div className="grid">
@@ -126,6 +126,21 @@ export default function Calculator({ todayISO, initial, font }: Props) {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Баня */}
+          <div className="field">
+            <label className="switch">
+              <input type="checkbox" checked={bath} onChange={(e) => setBath(e.target.checked)} />
+              <span className="switch__box" aria-hidden="true" />
+              <span className="switch__text">
+                <b>Банный комплекс, {BATH.hours} часа</b>
+                <span>
+                  Финская, русская, хаммам. {BATH.perGuest} руб. с каждого гостя, минимум {BATH.minimum}.
+                  {bath && <> Сейчас — <b>{formatRub(q.bathCost)} руб.</b></>}
+                </span>
+              </span>
+            </label>
           </div>
 
           {/* Дата */}
@@ -180,20 +195,6 @@ export default function Calculator({ todayISO, initial, font }: Props) {
             {capacityHint && <p className="field__hint field__hint--warm">{capacityHint}</p>}
           </div>
 
-          {/* Баня */}
-          <div className="field">
-            <label className="switch">
-              <input type="checkbox" checked={bath} onChange={(e) => setBath(e.target.checked)} />
-              <span className="switch__box" aria-hidden="true" />
-              <span className="switch__text">
-                <b>Банный комплекс, {BATH.hours} часа</b>
-                <span>
-                  Финская, русская, хаммам. {BATH.perGuest} руб. с каждого гостя, минимум {BATH.minimum}.
-                  {bath && <> Сейчас — <b>{formatRub(q.bathCost)} руб.</b></>}
-                </span>
-              </span>
-            </label>
-          </div>
         </div>
 
         {/* Итог */}
@@ -271,7 +272,7 @@ export default function Calculator({ todayISO, initial, font }: Props) {
         <section aria-label="Условия">
           <h2>Условия</h2>
           <ul>
-            <li>Сутки: заезд 15:00, выезд 12:00 следующего дня. День с коттеджем — до 24:00, только территория — до 23:00.</li>
+            <li>С домом на сутки: заезд 15:00, выезд 12:00 следующего дня. С домом на день — до 24:00, только территория — до 23:00.</li>
             <li>Будни (вс–чт) — минимум {formatRub(DAY_MINIMUM.weekday)} руб., пятница, суббота и праздники — {formatRub(DAY_MINIMUM.weekend)} руб.</li>
             <li>Баня считается на всех, кто на усадьбе. Дети до {CHILD_FREE_UNDER} лет гостями не считаются.</li>
             <li>Залог {formatRub(DEPOSIT)} руб. возвращается после проживания.</li>
