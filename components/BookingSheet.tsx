@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Quote } from "@/lib/pricing";
-import { formatRub } from "@/lib/pricing";
+import { formatRub, isLowSeason } from "@/lib/pricing";
+import { CHILD_FREE_UNDER, LOW_SEASON, NEW_YEAR_NOTE } from "@/lib/pricing.config";
 
 interface Props {
   open: boolean;
@@ -49,7 +50,7 @@ export default function BookingSheet({ open, onClose, q, dateLabel }: Props) {
           <div className="booking__ok">
             <div className="n">№ {String(done).padStart(4, "0")}</div>
             <p style={{ margin: 0 }}>
-              Перезвоним в течение часа, чтобы подтвердить дату <b>{dateLabel}</b> для {q.guests}{" "}
+              Перезвоним в течение часа, чтобы подтвердить {q.days > 1 ? "даты" : "дату"} <b>{dateLabel}</b> для {q.guests}{" "}
               {plural(q.guests, "гостя", "гостей", "гостей")}.
             </p>
             <p className="booking__demo">
@@ -60,11 +61,28 @@ export default function BookingSheet({ open, onClose, q, dateLabel }: Props) {
         ) : (
           <form onSubmit={submit}>
             <div className="rows">
-              <div className="row"><span className="row__k">Формат</span><span className="row__v">{q.format.name} · {q.format.checkIn} → {q.format.checkOut}</span></div>
-              <div className="row"><span className="row__k">Дата</span><span className="row__v">{dateLabel}</span></div>
+              <div className="row"><span className="row__k">Формат</span><span className="row__v">{q.newYear ? "Новый год, посуточно" : q.format.name} · {q.format.checkIn} → {q.format.checkOut}</span></div>
+              <div className="row"><span className="row__k">{q.days > 1 ? "Даты" : "Дата"}</span><span className="row__v">{dateLabel}</span></div>
               <div className="row"><span className="row__k">Гостей</span><span className="row__v">{q.guests}</span></div>
               <div className="row"><span className="row__k">Баня</span><span className="row__v">{q.bath ? `да, ${formatRub(q.bathCost)} руб.` : "нет"}</span></div>
+              {q.discount > 0 && <div className="row row--deal"><span className="row__k">Скидка</span><span className="row__v">−{formatRub(q.discount)} руб.</span></div>}
               <div className="row"><span className="row__k">Итого</span><span className="row__v"><b>{formatRub(q.total)} руб.</b> + залог {formatRub(q.deposit)}</span></div>
+            </div>
+            <div className="brief">
+              <span className="brief__k">Важно знать</span>
+              <ul>
+                <li>
+                  Заезд с {q.format.checkIn}, выезд до {q.format.checkOut}{q.format.overnight ? " следующего дня" : ""}.
+                  Ранний и/или поздний заезд — за доплату.
+                </li>
+                <li>Залог {formatRub(q.deposit)} руб. за сохранность имущества — возвращаем при выселении.</li>
+                <li>
+                  Дети до {CHILD_FREE_UNDER} лет не считаются.
+                  {q.dates.some(isLowSeason) && ` С 1 ноября по 15 апреля — до ${LOW_SEASON.maxGuests} гостей.`}
+                </li>
+                {q.newYear && <li>{NEW_YEAR_NOTE}</li>}
+              </ul>
+              <a href="#terms" className="brief__more" onClick={onClose}>Все условия аренды</a>
             </div>
             <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
               <label className="fld">

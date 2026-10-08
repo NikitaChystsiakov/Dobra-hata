@@ -313,8 +313,13 @@ h3 {
   transition: border-color 160ms var(--ease), background-color 160ms var(--ease);
 }
 
-.variant:hover {
+.variant:hover:not(:disabled) {
   border-color: var(--text-3);
+}
+
+.variant:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .variant__name {
@@ -422,6 +427,8 @@ h3 {
   font-size: 15px;
   font-variant-numeric: tabular-nums;
   background: var(--bg-2);
+  /* --ring — обводка (скидка, предпросмотр), --bridge — заливка зазора слева в диапазоне */
+  box-shadow: var(--ring, 0 0 #0000), var(--bridge, 0 0 #0000);
   transition: background-color 120ms var(--ease);
 }
 
@@ -460,10 +467,214 @@ h3 {
   text-decoration-thickness: 1.5px;
 }
 
-.day.is-selected,
-.day.is-selected:hover {
+/* Выбор: заезд и выезд — плотно, ночи между — сплошной мягкой полосой */
+.day.is-in,
+.day.is-in:hover,
+.day.is-out,
+.day.is-out:hover {
   background: var(--accent);
   color: var(--accent-text);
+}
+
+.day.is-mid,
+.day.is-mid:not(:disabled):hover {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-radius: 0;
+}
+
+.cal__grid.is-stay .day.is-in {
+  border-radius: var(--r-s) 0 0 var(--r-s);
+}
+
+.cal__grid.is-stay .day.is-out {
+  border-radius: 0 var(--r-s) var(--r-s) 0;
+}
+
+.day.is-mid,
+.day.is-out {
+  --bridge: -4px 0 0 var(--accent-soft);
+}
+
+/* Полоса не вылезает за левый край недели; на краях недели — скругление */
+.cal__grid > .day:nth-child(7n + 1) {
+  --bridge: 0 0 #0000;
+}
+
+.cal__grid > .day.is-mid:nth-child(7n + 1) {
+  border-radius: var(--r-s) 0 0 var(--r-s);
+}
+
+.cal__grid > .day.is-mid:nth-child(7n) {
+  border-radius: 0 var(--r-s) var(--r-s) 0;
+}
+
+.cal__grid.is-stay > .day.is-in:nth-child(7n),
+.cal__grid.is-stay > .day.is-out:nth-child(7n + 1) {
+  border-radius: var(--r-s);
+}
+
+.day.is-far:not(:disabled) {
+  opacity: 0.45;
+}
+
+/* Выезд при наведении — ещё не выбран */
+.day.is-out.is-preview,
+.day.is-out.is-preview:hover {
+  background: var(--accent-soft);
+  color: var(--text);
+  --ring: inset 0 0 0 1.5px var(--accent);
+}
+
+.day__tag {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.day:has(.day__tag) {
+  padding-bottom: 10px;
+}
+
+.day:has(.day__tag)::after {
+  display: none;
+}
+
+/* Один день / несколько суток */
+.seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  background: var(--bg-2);
+}
+
+.seg__opt {
+  min-height: 42px;
+  border-radius: var(--r-s);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-2);
+  transition: background-color 160ms var(--ease), color 160ms var(--ease);
+}
+
+.seg__opt:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.seg__opt[aria-checked="true"] {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.seg__opt:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Поля «Заезд» и «Выезд» над календарём */
+.slots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.slots--one {
+  grid-template-columns: 1fr;
+}
+
+.slot {
+  display: grid;
+  gap: 1px;
+  padding: 10px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  text-align: left;
+  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+}
+
+button.slot:hover {
+  border-color: var(--text-3);
+}
+
+.slot.is-active,
+button.slot.is-active:hover {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.slot__k {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+}
+
+.slot__v {
+  font-weight: 600;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.slot.is-preview .slot__v {
+  color: var(--text-2);
+}
+
+.slot__s {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.slot__s.is-warm {
+  color: var(--warm);
+}
+
+.slots__n {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.slots__n.is-preview {
+  color: var(--text-3);
+}
+
+/* Новогодние даты — звёздочка в углу */
+.day.is-ny::before {
+  content: "✦";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--warm);
+}
+
+.day.is-ny.is-in::before,
+.day.is-ny.is-out:not(.is-preview)::before {
+  color: var(--accent-text);
+}
+
+.cal__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-3);
+  min-height: 1.4em;
 }
 
 .cal__foot {
@@ -488,17 +699,25 @@ h3 {
   border: 1px solid var(--line-2);
 }
 
-.cal__foot i.k-sel {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
 .cal__foot i.k-busy {
   border-style: dashed;
 }
 
 .cal__foot i.k-we {
   border-color: var(--warm);
+}
+
+.cal__foot i.k-ny {
+  border: 0;
+  width: auto;
+  height: auto;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--warm);
+}
+
+.cal__foot i.k-ny::before {
+  content: "✦";
 }
 
 /* Гости */
@@ -761,6 +980,10 @@ h3 {
   font-weight: 600;
 }
 
+.row__days span {
+  display: block;
+}
+
 .ny {
   margin: 0;
   color: var(--warm);
@@ -819,23 +1042,21 @@ h3 {
   margin-top: 48px;
   padding-top: 28px;
   border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
   gap: 28px;
+  flex-wrap: wrap;
 }
 
-.foot h2 {
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-.foot ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.foot__brand {
   display: grid;
   gap: 6px;
-  font-size: 15px;
+}
+
+.foot__brand p {
+  margin: 0;
+  font-size: 14px;
   color: var(--text-2);
 }
 
@@ -843,17 +1064,71 @@ h3 {
   display: grid;
   gap: 6px;
   font-size: 16px;
+  justify-items: end;
 }
 
 .contact a {
   font-weight: 600;
-  width: fit-content;
 }
 
-.contact p {
-  margin: 6px 0 0;
-  font-size: 14px;
+/* ---------- Условия ---------- */
+.terms {
+  margin-top: 56px;
+  scroll-margin-top: 24px;
+}
+
+.terms__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 24px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.terms__head h2 {
+  font-size: 24px;
+}
+
+.terms__head p {
+  margin: 0;
+  font-size: 15px;
   color: var(--text-2);
+}
+
+.terms__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 24px;
+  margin: 0;
+}
+
+.term {
+  padding-top: 14px;
+  border-top: 1px solid var(--line-2);
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.term dt {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.term dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.term--accent {
+  border-top-color: var(--accent);
+}
+
+.term--accent dt {
+  color: var(--accent);
 }
 
 /* ---------- Текстовая страница (политика) ---------- */
@@ -935,6 +1210,40 @@ h3 {
   padding: 12px 14px;
   border-radius: var(--r-s);
   background: var(--bg-3);
+}
+
+/* Коротко об условиях в заявке */
+.brief {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s);
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.brief__k {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.brief ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+
+.brief__more {
+  width: fit-content;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.brief__more::after {
+  content: " →";
 }
 
 .fld {
@@ -1027,6 +1336,10 @@ h3 {
   .summary {
     position: static;
   }
+
+  .terms__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
@@ -1085,13 +1398,37 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .stepper {
+    display: grid;
+    grid-template-columns: 56px 1fr 56px;
+  }
+
   .photos {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
-  .foot {
+  .contact {
+    justify-items: start;
+  }
+
+  .terms__grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .slots {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .slots__n {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .slot__v {
+    font-size: 16px;
   }
 
   .mini {
@@ -1128,5 +1465,137 @@ h3 {
   .mini__lbl {
     font-size: 12px;
     color: var(--text-2);
+  }
+}
+
+/* Скидка за бронь на завтра/послезавтра */
+.deal {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px 18px;
+  margin: 0 0 28px;
+  padding: 16px 18px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r);
+  background: var(--accent-soft);
+}
+
+.deal__pct {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.deal__text {
+  display: grid;
+  gap: 2px;
+}
+
+.deal__text b {
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.deal__text span {
+  font-size: 15px;
+  color: var(--text-2);
+}
+
+.deal__go {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.deal__go .btn {
+  flex-direction: column;
+  gap: 0;
+  min-height: 50px;
+  padding: 6px 16px;
+  line-height: 1.25;
+  border-color: var(--accent);
+}
+
+.deal__go .btn span {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.deal__go .btn[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.day.is-deal {
+  --ring: inset 0 0 0 1.5px var(--accent);
+}
+
+.day.is-deal::before {
+  content: "%";
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.day.is-deal.is-in::before,
+.day.is-deal.is-out:not(.is-preview)::before {
+  color: var(--accent-text);
+}
+
+.cal__foot i.k-deal {
+  border: 0;
+  width: auto;
+  height: auto;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.row--deal .row__k,
+.row--deal .row__v {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .deal {
+    grid-template-columns: auto 1fr;
+    padding: 14px;
+  }
+
+  .deal__pct {
+    font-size: 28px;
+  }
+
+  .deal__go {
+    grid-column: 1 / -1;
+  }
+
+  .deal__go {
+    flex-wrap: nowrap;
+  }
+
+  .deal__go .btn {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+  }
+
+  .deal__text b {
+    font-size: 16px;
+  }
+
+  .deal__text span {
+    font-size: 14px;
   }
 }

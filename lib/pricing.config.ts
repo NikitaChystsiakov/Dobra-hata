@@ -58,7 +58,7 @@ export const FORMATS: readonly RentalFormat[] = [
     name: "Территория на день",
     perGuest: 100,
     checkIn: "15:00",
-    checkOut: "23:00",
+    checkOut: "24:00",
     overnight: false,
     zones: ["parking", "court", "kitchen", "pagoda", "garden", "playground", "pool", "ash"],
   },
@@ -84,20 +84,29 @@ export const BATH = {
 
 export const DEPOSIT = 1600;
 
-/** До какой даты действует этот прайс (с 1 мая 2027 у клиента другие тарифы) */
-export const TARIFF_VALID_UNTIL = "2027-04-30";
-
 /** Дети до этого возраста гостями не считаются */
-export const CHILD_FREE_UNDER = 14;
+export const CHILD_FREE_UNDER = 5;
 
 export const GUESTS = { min: 1, max: 100, default: 10 } as const;
 
-/** Вместимость — предупреждения, не запрет */
-export const CAPACITY = {
-  livingRoom: 25,
-  terraceSummer: 70,
-  buffet: 100,
-} as const;
+/**
+ * Межсезонье: с 1 ноября по 15 апреля включительно — не больше 25 гостей
+ * (летние зоны закрыты). В остальное время — до GUESTS.max.
+ * Даты в формате «MM-DD».
+ */
+export const LOW_SEASON = { from: "11-01", to: "04-15", maxGuests: 25 } as const;
+
+/**
+ * Скидка «в последний момент»: заезд завтра или послезавтра.
+ * daysAhead — через сколько дней от сегодня заезд. На новогодний тариф не действует.
+ */
+export const LAST_MINUTE = { daysAhead: [1, 2], percent: 10, withBath: true } as const;
+
+/** Пометки под расчётом */
+export const EXTRA_NOTES: readonly string[] = [
+  "Возможен ранний и/или поздний заезд за доплату.",
+  "Возможна скидка нешумным компаниям и для семейного отдыха — уточняйте по телефону.",
+];
 
 /**
  * Государственные праздники Республики Беларусь.
@@ -120,18 +129,35 @@ export const HOLIDAYS_BY_YEAR: Readonly<Record<number, readonly string[]>> = {
   2028: ["2028-04-25"],
 };
 
-/** Новогодний тариф считается отдельно — на эти даты калькулятор показывает пометку */
-export const NEW_YEAR_DATES: readonly string[] = ["12-31", "01-01", "01-02"];
+/** Сколько дней подряд можно выбрать в календаре */
+export const STAY_MAX_DAYS = 10;
+
+/**
+ * Новогодний тариф — если в заезд попадает хотя бы одна из этих дат («MM-DD»).
+ * Считается за весь заезд целиком, от числа гостей не зависит (по прайсу).
+ */
+export const NEW_YEAR_DATES: readonly string[] = ["12-31", "01-01"];
+
+export const NEW_YEAR = {
+  /** Минимум суток */
+  minDays: 2,
+  /** За первые двое суток, руб. */
+  twoDays: 7000,
+  /** Третьи сутки, руб. */
+  thirdDay: 2500,
+  /** Каждые следующие сутки, руб. */
+  extraDay: 1600,
+} as const;
 
 export const NEW_YEAR_NOTE =
-  "Новогодний тариф: 7 000 руб. за двое суток, третьи сутки +2 500, каждые следующие +1 600. Минимум двое суток. Уточняйте по телефону.";
+  "Новогодние даты бронируются по телефону — подтвердим условия и наличие.";
 
 /**
  * Демонстрация занятости: пока нет синхронизации с календарём,
  * несколько дат помечены занятыми, чтобы показать, как это будет выглядеть.
  * Смещения в днях от сегодняшнего.
  */
-export const DEMO_BUSY_OFFSETS: readonly number[] = [3, 4, 11, 18, 19, 26];
+export const DEMO_BUSY_OFFSETS: readonly number[] = []; // занятость пока не показываем (по просьбе клиента)
 
 export const CONTACTS = {
   phones: ["+375 (29) 857-67-68", "+375 (29) 643-67-68"],
@@ -141,10 +167,3 @@ export const CONTACTS = {
   address: "д. Прилепы, пер. Школьный, 1 · Смолевичский р-н, Минская обл.",
   gps: "54.075906, 27.83404",
 } as const;
-
-/** Оплачивается отдельно по договорённости — в расчёт не входит */
-export const NOT_INCLUDED: readonly string[] = [
-  "Питание и банкетное обслуживание",
-  "Фотосессии",
-  "Продление аренды по часам",
-];

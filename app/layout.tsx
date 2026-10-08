@@ -52,7 +52,7 @@ const jsonLd = {
     { "@type": "LocationFeatureSpecification", name: "Открытый бассейн 5×10 м" },
     { "@type": "LocationFeatureSpecification", name: "Спортплощадка: теннис, баскетбол, мини-футбол" },
     { "@type": "LocationFeatureSpecification", name: "Банкетный павильон «Пагода» до 70 гостей" },
-    { "@type": "LocationFeatureSpecification", name: "Банный комплекс: финская, русская, хаммам" },
+    { "@type": "LocationFeatureSpecification", name: "Банный комплекс: русская баня и хаммам" },
   ],
 };
 
