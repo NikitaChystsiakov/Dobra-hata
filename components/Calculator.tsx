@@ -140,7 +140,7 @@ export default function Calculator({ todayISO, initial, font }: Props) {
           <span className="deal__pct">−{LAST_MINUTE.percent}%</span>
           <div className="deal__text">
             <b>Собрались спонтанно? Так даже выгоднее</b>
-            <span>При заезде завтра или послезавтра аренда{LAST_MINUTE.withBath ? " и баня" : ""} — на {LAST_MINUTE.percent}% дешевле.</span>
+            <span>При бронировании сегодня на сегодня или на завтра аренда — на {LAST_MINUTE.percent}% дешевле. На баню скидка не действует.</span>
           </div>
           <div className="deal__go">
             {dealDates.map((d) => (
@@ -151,7 +151,7 @@ export default function Calculator({ todayISO, initial, font }: Props) {
                 aria-pressed={q.start === d}
                 onClick={() => applyDates(d, days, mode)}
               >
-                <b>{d === addDays(todayISO, 1) ? "Завтра" : "Послезавтра"}</b>
+                <b>{d === todayISO ? "Сегодня" : "Завтра"}</b>
                 <span>{dateShort(d)}</span>
               </button>
             ))}
@@ -435,7 +435,7 @@ export default function Calculator({ todayISO, initial, font }: Props) {
           <div className="term term--accent">
             <dt>Скидки</dt>
             <dd>
-              −{LAST_MINUTE.percent}% при заезде завтра или послезавтра. Тихим компаниям и семейному отдыху — тоже возможна скидка, уточняйте по телефону.
+              −{LAST_MINUTE.percent}% на аренду при бронировании сегодня на сегодня или на завтра (на баню не действует). Тихим компаниям и семейному отдыху — тоже возможна скидка, уточняйте по телефону.
             </dd>
           </div>
         </dl>

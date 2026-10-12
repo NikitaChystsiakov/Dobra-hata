@@ -16,7 +16,7 @@ node --test lib/pricing.test.ts   # контрольные примеры из �
 
 | Что | Где |
 |---|---|
-| Тарифы, минимумы, ставка бани, залог, сезон, скидка «завтра/послезавтра» | `lib/pricing.config.ts` |
+| Тарифы, минимумы, ставка бани, залог, сезон, скидка «сегодня/завтра» | `lib/pricing.config.ts` |
 | Праздники (фиксированные и Радуница по годам) | `lib/pricing.config.ts` → `HOLIDAYS_FIXED`, `HOLIDAYS_BY_YEAR` |
 | Демо-занятые даты в календаре | `lib/pricing.config.ts` → `DEMO_BUSY_OFFSETS` (смещения от сегодня) |
 | Телефоны, Instagram, адрес | `lib/pricing.config.ts` → `CONTACTS` |

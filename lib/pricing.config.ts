@@ -97,10 +97,11 @@ export const GUESTS = { min: 1, max: 100, default: 10 } as const;
 export const LOW_SEASON = { from: "11-01", to: "04-15", maxGuests: 25 } as const;
 
 /**
- * Скидка «в последний момент»: заезд завтра или послезавтра.
- * daysAhead — через сколько дней от сегодня заезд. На новогодний тариф не действует.
+ * Скидка «в последний момент»: бронь сегодня на сегодня или на завтра.
+ * daysAhead — через сколько дней от сегодня заезд. Только на аренду, на баню не действует.
+ * На новогодний тариф не действует.
  */
-export const LAST_MINUTE = { daysAhead: [1, 2], percent: 10, withBath: true } as const;
+export const LAST_MINUTE = { daysAhead: [0, 1], percent: 10, withBath: false } as const;
 
 /** Пометки под расчётом */
 export const EXTRA_NOTES: readonly string[] = [

@@ -79,7 +79,7 @@ function daysFrom(todayISO: string, iso: string): number {
   return Math.round((fromISODate(iso).getTime() - fromISODate(todayISO).getTime()) / 86_400_000);
 }
 
-/** Заезд завтра или послезавтра — скидка */
+/** Заезд сегодня или завтра — скидка */
 export function isLastMinute(todayISO: string, startISO: string): boolean {
   return (LAST_MINUTE.daysAhead as readonly number[]).includes(daysFrom(todayISO, startISO));
 }

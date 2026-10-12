@@ -84,17 +84,17 @@ test("межсезонье 1 ноября — 15 апреля: до 25 гост�
   assert.equal(maxGuestsFor(["2026-10-31", "2026-11-01"]), 25);
 });
 
-test("скидка 10% на завтра и послезавтра", () => {
+test("скидка 10% на сегодня и завтра, только на аренду", () => {
   const today = "2026-10-07"; // среда
-  // завтра, чт, 12 гостей, сутки, с баней: 2160 + 540 = 2700 → −270
+  // завтра, чт, 12 гостей, сутки, с баней: аренда 2160 + баня 540 = 2700; скидка только с аренды → −216
   const q1 = quote("a", "2026-10-08", 12, true, 1, today);
   assert.equal(q1.lastMinute, true);
   assert.equal(q1.subtotal, 2700);
-  assert.equal(q1.discount, 270);
-  assert.equal(q1.total, 2430);
-  assert.equal(quote("a", "2026-10-09", 12, false, 1, today).lastMinute, true); // послезавтра
+  assert.equal(q1.discount, 216);
+  assert.equal(q1.total, 2484);
+  assert.equal(quote("a", "2026-10-07", 12, false, 1, today).lastMinute, true); // сегодня
+  assert.equal(quote("a", "2026-10-09", 12, false, 1, today).lastMinute, false); // послезавтра
   assert.equal(quote("a", "2026-10-10", 12, false, 1, today).lastMinute, false); // через 3 дня
-  assert.equal(quote("a", "2026-10-07", 12, false, 1, today).lastMinute, false); // сегодня
   // на новогодний тариф не действует
   assert.equal(quote("a", "2026-12-31", 10, false, 2, "2026-12-30").discount, 0);
 });
